@@ -124,7 +124,7 @@ def tuples_importer(input_file, threshold):
                 yield u, v, weight, time, domain, cum_perc_time, cum_perc_time_domain
 
 
-def graph_processor(input_file, threshold, id_dictionary, include_layout=True):
+def graph_processor(input_file, threshold, id_dictionary, include_layout=True, include_metrics=True):
     """
     Creates a compressed .graphml file which contains statistics and layout coordinates.
     Also creates a csv containing graph statistics.
@@ -140,12 +140,12 @@ def graph_processor(input_file, threshold, id_dictionary, include_layout=True):
                         edge_attrs=('weight', 'time', 'domain', 'cum_perc_time', 'cum_perc_time_domain'),
                         directed=False)
     g.vs['label'] = [id_dictionary[node] for node in g.vs['name']]
-
-    # graph metrics
     g.vs['degree'] = g.degree()
-    g.vs['betweenness'] = g.betweenness()
-    g.vs['eigenvector_centrality'] = g.eigenvector_centrality()
-    g.vs['authority'] = g.authority_score()
+    
+    if include_metrics:
+        g.vs['betweenness'] = g.betweenness()
+        g.vs['eigenvector_centrality'] = g.eigenvector_centrality()
+        g.vs['authority'] = g.authority_score()
 
     # compute layout
     if include_layout:
@@ -156,12 +156,14 @@ def graph_processor(input_file, threshold, id_dictionary, include_layout=True):
 
     # metrics csv
     stats = pd.DataFrame()
-    stats['degree'] = g.vs['degree']
-    stats['betwennness'] = g.vs['betweenness']
-    stats['eigenvector_centrality'] = g.vs['eigenvector_centrality']
-    stats['authority'] = g.vs['authority']
+    stats['degree'] = g.vs['degree']    
     stats['vertex'] = g.vs['name']
     stats['label'] = [id_dictionary[int(number)] for number in stats.vertex]
+    
+    if include_metrics:        
+        stats['betwennness'] = g.vs['betweenness']
+        stats['eigenvector_centrality'] = g.vs['eigenvector_centrality']
+        stats['authority'] = g.vs['authority']
 
     if include_layout:
         stats['x'] = g.vs['x']
