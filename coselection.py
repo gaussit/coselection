@@ -172,9 +172,9 @@ def graph_processor(input_file, threshold, id_dictionary, include_layout=True):
 
 def lcc_metrics(graph):
     """
-    Ddasd
-    :param graph:
-    :return:
+    Computes graph metrics of the largest component cluster in a graph.
+    :param graph: the graph for that the metrics are going to be computed
+    :return: the metrics for the curent graph
     """
 
     nodes = len(graph.vs())
@@ -192,10 +192,10 @@ def lcc_metrics(graph):
 
 def threshold_metrics(input_file, thresholds):
     """
-    Takes an input file and a threshold list and computes assortativity and modularity for each threshold.
-    :param input_file:
-    :param thresholds:
-    :return:
+    Takes an input file and a threshold list and computes assortativity and modularity for each threshold and domain.
+    :param input_file: the graph for that the metrics are going to be computed
+    :param thresholds: the threshold and therefore edge cutoff values up to which the metrics shall be computed
+    :return: dataframe that stores the metrics
     """
 
     metrics = []
